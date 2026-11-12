@@ -43,17 +43,7 @@ Extras:
 
 ## 安装 / Install
 
-### Option A — dsh CLI (recommended)
-
-```bash
-dsh plugin --profile desktop add dsh-honcho-memory-viz
-```
-
-This installs the package into the profile's `node_modules` **and** appends it
-to `dsh.profile.bundles` in `~/.dsh/profiles/<profile>/package.json`.
-Restart dsh afterwards, then open the **Memory** icon in the left sidebar.
-
-### Option B — in-app plugin manager
+### Option A — in-app plugin manager (desktop app)
 
 In the dsh Web UI open **Plugins**, choose *install bundle*, and enter:
 
@@ -67,10 +57,35 @@ or, from an agent session:
 plugin_manager(install_bundle, target: "dsh-honcho-memory-viz")
 ```
 
-### Manual verification (optional)
+Environment plugins installed into the Electron-managed `desktop` profile are
+usually active right away (the app hot-loads them); restart dsh if the
+**Memory** icon does not appear.
+
+### Option B — dsh CLI (recommended for CLI profiles)
 
 ```bash
-dsh --profile desktop --dump-config | grep -A2 honcho-memory-viz
+dsh plugin --profile <profile> add dsh-honcho-memory-viz
+```
+
+This installs the package into the profile's `node_modules` **and** appends it
+to `dsh.profile.bundles` in `~/.dsh/profiles/<profile>/package.json`.
+Restart dsh afterwards, then open the **Memory** icon in the left sidebar.
+For the Electron-managed `desktop` profile the CLI still works, but the in-app
+Plugin Manager (Option A) is the smoother path.
+
+### Manual verification (optional)
+
+The plugin should be listed as installed and enabled in the in-app Plugin
+Manager. Note that the `desktop` profile is managed by the Electron app, so the
+standalone CLI refuses `dsh --profile desktop --dump-config` ("managed
+exclusively by the Electron application"); use the Plugin Manager for that
+profile.
+
+For CLI-managed profiles (e.g. a custom profile booted with `dsh web`) you can
+also verify the composed row directly:
+
+```bash
+dsh --profile <profile> --dump-config | grep -A2 honcho-memory-viz
 ```
 
 should print the bundle patch row:
@@ -87,8 +102,13 @@ If the row is missing, the bundle was installed but not registered: add
 
 ### Uninstall
 
+Desktop app: open the in-app Plugin Manager and remove/uninstall
+`dsh-honcho-memory-viz`.
+
+CLI profile:
+
 ```bash
-dsh plugin --profile desktop remove dsh-honcho-memory-viz
+dsh plugin --profile <profile> remove dsh-honcho-memory-viz
 ```
 
 Then remove `dsh-honcho-memory-viz` from `dsh.profile.bundles` if it is still

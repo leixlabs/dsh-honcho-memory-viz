@@ -1,0 +1,7 @@
+# Honcho memory explorer: a read-only browser and relationship graph for the
+# memory stored on the user's Honcho server. The Host half serves its JSON API
+# under /honcho-memory; the Client half renders the sidebar panel.
+- insert:
+    - id: honcho-memory-viz
+      name: 'dsh-honcho-memory-viz'
+      config: {}
